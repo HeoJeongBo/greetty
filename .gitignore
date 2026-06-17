@@ -1,0 +1,17 @@
+# compiled binary
+/greetty
+
+# go build / test artifacts
+*.test
+*.out
+
+# greetty's own backup of the user's rc file
+.zshrc.greetty.bak
+
+# OS noise
+.DS_Store
+
+# editor / tooling local config
+.claude/
+.vscode/
+.idea/
