@@ -16,6 +16,9 @@ var rootCmd = &cobra.Command{
 	Use:     "greetty",
 	Short:   "A pretty developer greeting for your terminal",
 	Version: version,
+	// Errors are surfaced by Execute; don't dump usage on every runtime error.
+	SilenceUsage:  true,
+	SilenceErrors: true,
 	// With no subcommand, show the greeting — handy for piping/testing.
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return runGreet(cmd, args)
@@ -31,5 +34,5 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.AddCommand(initCmd, greetCmd, setCmd, uninstallCmd)
+	rootCmd.AddCommand(initCmd, greetCmd, setCmd, uninstallCmd, fontsCmd, previewCmd)
 }

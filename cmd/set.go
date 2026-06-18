@@ -6,6 +6,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/HeoJeongBo/greetty/internal/config"
+	"github.com/HeoJeongBo/greetty/internal/render"
 )
 
 var setCmd = &cobra.Command{
@@ -27,6 +28,9 @@ var setCmd = &cobra.Command{
 		case "emoji":
 			cfg.Emoji = value
 		case "font":
+			if !render.FontExists(value) {
+				return fmt.Errorf("unknown font %q — run 'greetty fonts' to see options", value)
+			}
 			cfg.Font = value
 		case "color":
 			cfg.Color = value
