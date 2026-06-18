@@ -86,9 +86,11 @@ greetty set color magenta
 
 ```zsh
 # >>> greetty >>>
-[ -f "~/.config/greetty/init.zsh" ] && source "~/.config/greetty/init.zsh"
+[ -f "$HOME/.config/greetty/init.zsh" ] && source "$HOME/.config/greetty/init.zsh"
 # <<< greetty <<<
 ```
+
+(greetty writes the **absolute** path it resolved, so the line works regardless of how your shell expands `~`.)
 
 Your own `.zshrc` content is left untouched, a one-time backup (`.zshrc.greetty.bak`) is made before the first change, and re-running `init` is idempotent (the block is added at most once). The sourced hook runs `greetty greet` exactly once per session, guarded by a `GREETTY_SHOWN` flag so it doesn't repeat on every prompt.
 
