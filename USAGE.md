@@ -71,15 +71,37 @@ greetty set color magenta
 
 Run `greetty greet` to preview without opening a new shell.
 
-| Field   | What it does                  | Default         |
-| ------- | ----------------------------- | --------------- |
-| `text`  | The banner text               | your login name |
-| `emoji` | Emoji above the banner        | `🚀`            |
-| `font`  | ASCII font (go-figure)        | `slant`         |
-| `color` | Banner color                  | `cyan`          |
+| Field   | What it does                                  | Default         |
+| ------- | --------------------------------------------- | --------------- |
+| `text`  | The banner text (emoji become ASCII art)      | your login name |
+| `emoji` | Emoji above the banner                        | `🚀`            |
+| `font`  | ASCII font (go-figure)                        | `slant`         |
+| `color` | Banner color                                  | `cyan`          |
 
 **Colors:** `black`, `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`, `white`.
-**Fonts:** any go-figure font — e.g. `slant`, `standard`, `small`, `big`, `banner`, `block`. Unknown fonts fall back to `standard`.
+**Fonts:** any of the 149 go-figure fonts. List them with `greetty fonts` and try one with `greetty preview <font>`. An unknown font is rejected by `set` and falls back to `standard` at render time.
+
+### Emoji in the text
+
+Put an emoji directly in `text` and it renders as ASCII art next to the letters:
+
+```sh
+greetty set text "heo 🚀"
+greetty greet
+```
+
+```
+                         /\
+    __                  |==|
+   / /_   ___   ____    |  |
+  / __ \ / _ \ / __ \  /|  |\
+ / / / //  __// /_/ / /_|__|_\
+/_/ /_/ \___/ \____/    *  *
+· · · · · · · · · · · · · · ·
+```
+
+Common emoji have hand-drawn art; others fall back to a large repeated-glyph
+block. This is independent of the `emoji` field (which prints above the banner).
 
 ---
 
@@ -90,6 +112,8 @@ Run `greetty greet` to preview without opening a new shell.
 | `greetty init`         | Create config and hook greetty into your shell.              |
 | `greetty greet`        | Print the banner (what the shell hook runs each session).    |
 | `greetty set <k> <v>`  | Update a field: `text`, `emoji`, `font`, `color`.            |
+| `greetty fonts`        | List available fonts (current one marked `*`).               |
+| `greetty preview <font>`| Render your banner with a font without saving it.           |
 | `greetty uninstall`    | Remove the shell hook. Config under `~/.config/greetty` stays.|
 | `greetty --version`    | Print the version.                                           |
 

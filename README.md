@@ -61,12 +61,12 @@ font  = "slant"
 color = "cyan"
 ```
 
-| Field   | Description                          | Default                  |
-| ------- | ------------------------------------ | ------------------------ |
-| `text`  | The banner text                      | your login name          |
-| `emoji` | Emoji shown above the banner         | `🚀`                     |
-| `font`  | go-figure ASCII font                 | `slant`                  |
-| `color` | Banner color                         | `cyan`                   |
+| Field   | Description                                          | Default                  |
+| ------- | --------------------------------------------------- | ------------------------ |
+| `text`  | The banner text (emoji become ASCII art — see below) | your login name          |
+| `emoji` | Emoji shown above the banner                         | `🚀`                     |
+| `font`  | go-figure ASCII font                                 | `slant`                  |
+| `color` | Banner color                                         | `cyan`                   |
 
 Edit the file directly, or use the `set` command:
 
@@ -78,7 +78,28 @@ greetty set color magenta
 ```
 
 **Colors:** `black`, `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`, `white`.
-**Fonts:** any [go-figure](https://github.com/common-nighthawk/go-figure) font, e.g. `slant`, `standard`, `small`, `big`, `banner`, `block`. An unknown font falls back to `standard`.
+**Fonts:** any [go-figure](https://github.com/common-nighthawk/go-figure) font (149 in total). Run `greetty fonts` to list them and `greetty preview <font>` to try one before committing. An unknown font is rejected by `set` and safely falls back to `standard` at render time.
+
+## Emoji in the banner text
+
+Put an emoji directly in `text` and greetty renders it as **ASCII art** sized to sit next to the big letters:
+
+```sh
+greetty set text "heo 🚀"
+greetty greet
+```
+
+```
+                         /\
+    __                  |==|
+   / /_   ___   ____    |  |
+  / __ \ / _ \ / __ \  /|  |\
+ / / / //  __// /_/ / /_|__|_\
+/_/ /_/ \___/ \____/    *  *
+· · · · · · · · · · · · · · ·
+```
+
+Common emoji (🚀 🔥 ⭐ ❤️ ☕ 🐱 💻 🎉 …) have hand-drawn art; any other emoji falls back to a large repeated-glyph block, so nothing ever breaks. This is separate from the `emoji` field, which still prints above the banner.
 
 ## How it works
 
@@ -103,6 +124,8 @@ If `$ZDOTDIR` is set, greetty targets `$ZDOTDIR/.zshrc`; otherwise `~/.zshrc`.
 | `greetty init`       | Create the default config and hook greetty into your shell.        |
 | `greetty greet`      | Print the banner to stdout (this is what the shell hook calls).    |
 | `greetty set <k> <v>`| Update a config field: `text`, `emoji`, `font`, or `color`.        |
+| `greetty fonts`      | List all available banner fonts (the current one is marked `*`).   |
+| `greetty preview <font>`| Render your banner with a font without saving it.              |
 | `greetty uninstall`  | Remove the shell hook. Your config under `~/.config/greetty` stays.|
 
 ## Uninstall
