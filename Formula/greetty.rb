@@ -2,8 +2,7 @@ class Greetty < Formula
   desc "Pretty, developer-flavored greeting banner for your terminal"
   homepage "https://github.com/HeoJeongBo/greetty"
   url "https://github.com/HeoJeongBo/greetty/archive/refs/tags/v0.1.0.tar.gz"
-  # Replace with: shasum -a 256 v0.1.0.tar.gz   (see DEPLOY.md step 4)
-  sha256 "REPLACE_WITH_TARBALL_SHA256"
+  sha256 "fffa2d37513f39c36d061e754b59ef068472857e3e204f629c9edb8cb806b69d"
   license "MIT"
   head "https://github.com/HeoJeongBo/greetty.git", branch: "main"
 
