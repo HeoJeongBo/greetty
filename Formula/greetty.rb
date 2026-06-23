@@ -1,8 +1,8 @@
 class Greetty < Formula
   desc "Pretty, developer-flavored greeting banner for your terminal"
   homepage "https://github.com/HeoJeongBo/greetty"
-  url "https://github.com/HeoJeongBo/greetty/archive/refs/tags/v0.2.0.tar.gz"
-  sha256 "1639a4abde490961c6d0b373502380531c64076e3cf08bb4cca40d32cee5c318"
+  url "https://github.com/HeoJeongBo/greetty/archive/refs/tags/v0.3.0.tar.gz"
+  sha256 "ae7fa04330599c80625eb746d75e8bbc026f3f20b2b3954c6b348261122bf648"
   license "MIT"
   head "https://github.com/HeoJeongBo/greetty.git", branch: "main"
 
