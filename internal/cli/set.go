@@ -1,4 +1,4 @@
-package cmd
+package cli
 
 import (
 	"fmt"
@@ -12,7 +12,9 @@ import (
 var setCmd = &cobra.Command{
 	Use:   "set <field> <value>",
 	Short: "Update a config field (text, emoji, font, color)",
-	Long:  "Update a config field without editing config.toml by hand.\nFields: text, emoji, font, color.",
+	Long: "Update a config field without editing config.toml by hand.\n" +
+		"Fields: text, emoji, font, color.\n" +
+		"Colors: black, red, green, yellow, blue, magenta, cyan, white, rainbow.",
 	Args:  cobra.ExactArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		field, value := args[0], args[1]
@@ -33,6 +35,9 @@ var setCmd = &cobra.Command{
 			}
 			cfg.Font = value
 		case "color":
+			if !render.IsColor(value) {
+				return fmt.Errorf("unknown color %q — run 'greetty colors' to see options", value)
+			}
 			cfg.Color = value
 		default:
 			return fmt.Errorf("unknown field %q (use: text, emoji, font, color)", field)

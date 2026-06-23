@@ -30,14 +30,14 @@ This taps `HeoJeongBo/homebrew-greetty` and installs the binary onto your `PATH`
 ### Go
 
 ```sh
-go install github.com/HeoJeongBo/greetty@latest
+go install github.com/HeoJeongBo/greetty/cmd/greetty@latest
 ```
 
 ### From source
 
 ```sh
 git clone https://github.com/HeoJeongBo/greetty && cd greetty
-go build -o greetty .
+go build -o greetty ./cmd/greetty
 mv greetty /usr/local/bin/   # or anywhere on your PATH
 ```
 
@@ -77,7 +77,17 @@ greetty set font  small
 greetty set color magenta
 ```
 
-**Colors:** `black`, `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`, `white`.
+**Colors:** single colors `black`, `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`, `white`.
+**Gradient presets:** `rainbow`, `fire`, `ocean`, `sunset`, `forest`, `neon`, `mono`. A preset paints the banner as a diagonal 24-bit gradient (lolcat-style) and needs a truecolor-capable terminal (e.g. iTerm2); it falls back to plain text when color is disabled (`NO_COLOR` or piped output). Run `greetty colors` to see every color and preset rendered in its own colors, and `greetty preview --color <name>` to try one on your banner before committing. An unknown color is rejected by `set`.
+
+```sh
+greetty colors                       # list colors + presets
+greetty --color rainbow              # one-shot: render now, don't save (-c/-f also work)
+greetty preview --color rainbow      # try a preset (current font)
+greetty preview small --color fire   # try a font and a preset together
+greetty set color sunset             # save it
+```
+
 **Fonts:** any [go-figure](https://github.com/common-nighthawk/go-figure) font (149 in total). Run `greetty fonts` to list them and `greetty preview <font>` to try one before committing. An unknown font is rejected by `set` and safely falls back to `standard` at render time.
 
 ## Emoji in the banner text
@@ -122,10 +132,11 @@ If `$ZDOTDIR` is set, greetty targets `$ZDOTDIR/.zshrc`; otherwise `~/.zshrc`.
 | Command              | Description                                                        |
 | -------------------- | ------------------------------------------------------------------ |
 | `greetty init`       | Create the default config and hook greetty into your shell.        |
-| `greetty greet`      | Print the banner to stdout (this is what the shell hook calls).    |
+| `greetty greet`      | Print the banner to stdout (the shell hook calls this). `--color/-c` and `--font/-f` override just this run without saving; the same flags work on bare `greetty`. |
 | `greetty set <k> <v>`| Update a config field: `text`, `emoji`, `font`, or `color`.        |
 | `greetty fonts`      | List all available banner fonts (the current one is marked `*`).   |
-| `greetty preview <font>`| Render your banner with a font without saving it.              |
+| `greetty colors`     | List colors and gradient presets (the current one is marked `*`).  |
+| `greetty preview [font] [--color <c>]`| Render your banner with a font and/or color without saving it. |
 | `greetty uninstall`  | Remove the shell hook. Your config under `~/.config/greetty` stays.|
 
 ## Uninstall

@@ -33,11 +33,6 @@ const defaultEmojiHeight = 6
 func Render(cfg config.Config) string {
 	banner := buildBanner(cfg.Text, cfg.Font)
 
-	c, ok := colorByName[strings.ToLower(cfg.Color)]
-	if !ok {
-		c = colorByName["cyan"]
-	}
-
 	width := bannerWidth(banner)
 	divider := dottedDivider(width)
 
@@ -46,10 +41,31 @@ func Render(cfg config.Config) string {
 	if cfg.Emoji != "" {
 		b.WriteString("  " + cfg.Emoji + "\n")
 	}
-	b.WriteString(c.Sprint(banner))
+	if g, ok := presets[strings.ToLower(cfg.Color)]; ok {
+		b.WriteString(applyGradient(banner, g))
+	} else {
+		c, ok := colorByName[strings.ToLower(cfg.Color)]
+		if !ok {
+			c = colorByName["cyan"]
+		}
+		b.WriteString(c.Sprint(banner))
+	}
 	b.WriteString(color.New(color.Faint).Sprint(divider))
 	b.WriteByte('\n')
 	return b.String()
+}
+
+// runeWidth approximates the terminal column width of a single rune, matching
+// displayWidth's accounting so the gradient stays aligned across wide emoji.
+func runeWidth(r rune) int {
+	switch {
+	case isJoiner(r):
+		return 0
+	case r > 0x7E:
+		return 2
+	default:
+		return 1
+	}
 }
 
 // buildBanner renders text into the banner body. Pure-ASCII text takes the
@@ -347,14 +363,7 @@ func bannerWidth(banner string) int {
 func displayWidth(line string) int {
 	w := 0
 	for _, r := range line {
-		switch {
-		case isJoiner(r):
-			// zero width
-		case r > 0x7E:
-			w += 2
-		default:
-			w++
-		}
+		w += runeWidth(r)
 	}
 	return w
 }

@@ -5,6 +5,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/fatih/color"
+
 	"github.com/HeoJeongBo/greetty/internal/config"
 )
 
@@ -22,6 +24,91 @@ func TestRenderPureASCIIUnchanged(t *testing.T) {
 	}
 	if !strings.Contains(out, "·") {
 		t.Errorf("expected dotted divider:\n%s", out)
+	}
+}
+
+func TestRenderRainbow(t *testing.T) {
+	// go test's stdout is not a TTY, so color.NoColor is true and the rainbow
+	// guard would no-op. Force color on for this test and restore after.
+	prev := color.NoColor
+	color.NoColor = false
+	defer func() { color.NoColor = prev }()
+
+	out := Render(config.Config{Text: "heo", Font: "slant", Color: "rainbow"})
+	if !strings.Contains(out, "\x1b[38;2;") {
+		t.Errorf("rainbow should emit truecolor escapes:\n%q", out)
+	}
+
+	stripped := stripANSI(out)
+	if strings.TrimSpace(stripped) == "" {
+		t.Fatal("expected non-empty banner")
+	}
+	if strings.Contains(stripped, "?") {
+		t.Errorf("rainbow banner should not contain '?':\n%s", stripped)
+	}
+	if !strings.Contains(stripped, "·") {
+		t.Errorf("expected dotted divider:\n%s", stripped)
+	}
+}
+
+func TestRenderPresets(t *testing.T) {
+	// go test's stdout is not a TTY, so color.NoColor is true and gradients
+	// would no-op. Force color on for this test and restore after.
+	prev := color.NoColor
+	color.NoColor = false
+	defer func() { color.NoColor = prev }()
+
+	for _, name := range Presets() {
+		out := Render(config.Config{Text: "heo", Font: "slant", Color: name})
+		if !strings.Contains(out, "\x1b[38;2;") {
+			t.Errorf("preset %q should emit truecolor escapes:\n%q", name, out)
+		}
+		stripped := stripANSI(out)
+		if strings.TrimSpace(stripped) == "" {
+			t.Errorf("preset %q produced an empty banner", name)
+		}
+		if strings.Contains(stripped, "?") {
+			t.Errorf("preset %q banner should not contain '?':\n%s", name, stripped)
+		}
+		if !strings.Contains(stripped, "·") {
+			t.Errorf("preset %q should keep the dotted divider:\n%s", name, stripped)
+		}
+	}
+}
+
+func TestIsColor(t *testing.T) {
+	for _, name := range []string{"cyan", "CYAN", "red", "rainbow", "Fire", "ocean"} {
+		if !IsColor(name) {
+			t.Errorf("IsColor(%q) = false, want true", name)
+		}
+	}
+	for _, name := range []string{"", "bogus", "neonish", "purple"} {
+		if IsColor(name) {
+			t.Errorf("IsColor(%q) = true, want false", name)
+		}
+	}
+}
+
+func TestColorize(t *testing.T) {
+	prev := color.NoColor
+	color.NoColor = false
+	defer func() { color.NoColor = prev }()
+
+	// A gradient preset emits truecolor escapes around the text.
+	if got := Colorize("rainbow", "hi"); !strings.Contains(got, "\x1b[38;2;") {
+		t.Errorf("Colorize gradient should emit truecolor escapes: %q", got)
+	}
+	// A single named color still wraps the text in an ANSI escape.
+	if got := Colorize("red", "hi"); !strings.Contains(got, "\x1b[") {
+		t.Errorf("Colorize named color should emit an ANSI escape: %q", got)
+	}
+	// An unknown name is returned unchanged.
+	if got := Colorize("bogus", "hi"); got != "hi" {
+		t.Errorf("Colorize(unknown) = %q, want %q", got, "hi")
+	}
+	// Either way the visible text is preserved.
+	if got := stripANSI(Colorize("ocean", "hi")); got != "hi" {
+		t.Errorf("Colorize should not alter the text: %q", got)
 	}
 }
 

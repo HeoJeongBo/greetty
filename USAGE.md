@@ -16,14 +16,14 @@ brew install HeoJeongBo/greetty/greetty
 ### Go
 
 ```sh
-go install github.com/HeoJeongBo/greetty@latest
+go install github.com/HeoJeongBo/greetty/cmd/greetty@latest
 ```
 
 ### From source
 
 ```sh
 git clone https://github.com/HeoJeongBo/greetty && cd greetty
-go build -o greetty .
+go build -o greetty ./cmd/greetty
 mv greetty /usr/local/bin/      # anywhere on your PATH
 ```
 

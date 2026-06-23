@@ -1,4 +1,4 @@
-package cmd
+package cli
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 
 // version is overridable at build time:
 //
-//	go build -ldflags "-X github.com/HeoJeongBo/greetty/cmd.version=1.2.3"
+//	go build -ldflags "-X github.com/HeoJeongBo/greetty/internal/cli.version=1.2.3" ./cmd/greetty
 var version = "0.1.0"
 
 var rootCmd = &cobra.Command{
@@ -34,5 +34,5 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.AddCommand(initCmd, greetCmd, setCmd, uninstallCmd, fontsCmd, previewCmd)
+	rootCmd.AddCommand(initCmd, greetCmd, setCmd, uninstallCmd, fontsCmd, previewCmd, colorsCmd)
 }

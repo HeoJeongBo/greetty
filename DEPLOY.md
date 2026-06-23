@@ -115,5 +115,5 @@ To re-test after edits without re-downloading:
 3. In the tap repo, update `url` (tag) and `sha256` in `Formula/greetty.rb`, commit, push.
 
 The `version` is injected at build time from the formula via ldflags
-(`-X github.com/HeoJeongBo/greetty/cmd.version=#{version}`), so the formula's tag
+(`-X github.com/HeoJeongBo/greetty/internal/cli.version=#{version}`), so the formula's tag
 drives `greetty --version` automatically.
